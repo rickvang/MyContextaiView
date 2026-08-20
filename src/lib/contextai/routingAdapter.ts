@@ -180,9 +180,7 @@ export function mermaidToFlowDocument(
                 ? "Terminal or handoff"
                 : "Workspace flow step",
       state: node.shape === "diamond" ? "decision" : "contract",
-      detail: contract
-        ? `Contract: ${contract.path}`
-        : `ContextAi node id: ${node.id}`,
+      detail: `ContextAi node id: ${node.id}`,
       contractPath: contract?.path,
       contractUrl: contract?.url,
     });

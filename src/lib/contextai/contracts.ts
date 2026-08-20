@@ -1,4 +1,5 @@
 const CONTEXTAI_GITHUB_ROOT = "https://github.com/rickvang/ContextAi/blob/main";
+const CONTEXTAI_RAW_ROOT = "https://raw.githubusercontent.com/rickvang/ContextAi/main";
 
 /** Mermaid node id → ContextAi repo-relative contract path */
 const CONTRACT_BY_ID: Record<string, string> = {
@@ -56,6 +57,18 @@ export type ContractRef = {
 
 export function contractUrlForPath(path: string): string {
   return `${CONTEXTAI_GITHUB_ROOT}/${path.split("/").map(encodeURIComponent).join("/")}`;
+}
+
+export function contractRawUrlForPath(path: string): string {
+  return `${CONTEXTAI_RAW_ROOT}/${path.split("/").map(encodeURIComponent).join("/")}`;
+}
+
+export async function fetchContractContent(path: string): Promise<string> {
+  const response = await fetch(contractRawUrlForPath(path));
+  if (!response.ok) {
+    throw new Error(`Failed to load contract (${response.status}): ${path}`);
+  }
+  return response.text();
 }
 
 export function resolveContract(nodeId: string, label: string): ContractRef | null {
