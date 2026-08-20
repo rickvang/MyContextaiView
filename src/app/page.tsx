@@ -60,6 +60,14 @@ export default function HomePage() {
     router.push(`/editor/${imported.id}`);
   };
 
+  const handleOpenRoutingGraph = () => {
+    void import("@/lib/contextai/routingAdapter").then(({ createContextAiRoutingFlow }) => {
+      const imported = saveFlow(createContextAiRoutingFlow());
+      refresh();
+      router.push(`/editor/${imported.id}`);
+    });
+  };
+
   const handleImportFlow = async (file: File) => {
     try {
       const raw = await readFileAsText(file);
@@ -91,12 +99,13 @@ export default function HomePage() {
           <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--accent)]">Agent Builder</div>
           <h1 className="mt-1 text-3xl font-semibold tracking-tight">Flowise-like Visual Builder</h1>
           <p className="mt-2 max-w-2xl text-sm text-[var(--muted)]">
-            Build and save ContextAi-aligned workflow graphs. Import ContextAi workflow traces or start from a blank canvas.
+            Build and save ContextAi-aligned workflow graphs. Open the live workspace routing graph from CONTEXT.md, import traces, or start from a blank canvas.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <ActionButton onClick={handleCreate}>New Flow</ActionButton>
-          <ActionButton onClick={handleImportExample}>Open Example</ActionButton>
+          <ActionButton onClick={handleOpenRoutingGraph}>Open Routing Graph</ActionButton>
+          <ActionButton onClick={handleImportExample}>Open Trace Example</ActionButton>
           <ActionButton onClick={() => importFlowRef.current?.click()}>Import Flow JSON</ActionButton>
           <ActionButton onClick={() => importTraceRef.current?.click()}>Import ContextAi Trace</ActionButton>
         </div>
@@ -112,7 +121,7 @@ export default function HomePage() {
 
         {flows.length === 0 ? (
           <div className="px-5 py-12 text-center">
-            <p className="text-sm text-[var(--muted)]">No flows yet. Create one or import the bundled ContextAi example.</p>
+            <p className="text-sm text-[var(--muted)]">No flows yet. Open the ContextAi routing graph or create a blank flow.</p>
           </div>
         ) : (
           <ul className="divide-y divide-[var(--border)]">

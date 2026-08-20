@@ -56,6 +56,15 @@ function testCatalogSnapshot() {
   assert.ok(catalog.skills.includes("Record Workflow Trace"));
 }
 
+function testWorkspaceFlowMermaid() {
+  const mermaidPath = path.join(root, "src/data/contextai-workspace-flow.mmd");
+  const source = fs.readFileSync(mermaidPath, "utf8");
+  assert.ok(source.includes("flowchart TD"));
+  assert.ok(source.includes('A["New user turn"]'));
+  assert.ok(source.includes("Conductor selects the smallest sufficient route"));
+  assert.ok(source.includes("Record Workflow Trace skill"));
+}
+
 function testBuildArtifacts() {
   assert.ok(fs.existsSync(path.join(root, ".next/BUILD_ID")));
 }
@@ -65,6 +74,7 @@ const tests = [
   ["export/import roundtrip", testExportImportRoundtrip],
   ["ContextAi trace example shape", testContextAiTraceShape],
   ["ContextAi catalog snapshot", testCatalogSnapshot],
+  ["ContextAi workspace flow mermaid", testWorkspaceFlowMermaid],
   ["production build artifacts", testBuildArtifacts],
 ];
 

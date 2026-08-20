@@ -9,7 +9,7 @@ export type FlowNodeType =
   | "note";
 
 export type FlowMetadata = {
-  source?: "manual" | "contextai-trace";
+  source?: "manual" | "contextai-trace" | "contextai-routing";
   importedFrom?: string;
   updatedAt?: string;
 };

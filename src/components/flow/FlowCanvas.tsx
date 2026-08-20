@@ -18,7 +18,7 @@ import "@xyflow/react/dist/style.css";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CatalogEntry } from "@/lib/contextai/catalog";
-import { relayoutFlowDocument } from "@/lib/contextai/traceAdapter";
+import { autoLayoutFlow } from "@/lib/contextai/traceAdapter";
 import {
   FlowHistory,
   duplicateSelectedNode,
@@ -284,10 +284,17 @@ function FlowCanvasInner({ initialFlow }: FlowCanvasProps) {
 
   const handleRelayout = useCallback(() => {
     commitSnapshot();
-    const relayouted = relayoutFlowDocument({
+    const rankdir = flow.metadata?.source === "contextai-routing" ? "TB" : "LR";
+    const current = {
       ...flow,
       nodes: fromReactFlowNodes(nodes),
       edges: fromReactFlowEdges(edges),
+    };
+    const layouted = autoLayoutFlow(current.nodes, current.edges, { rankdir });
+    const relayouted = touchFlow({
+      ...current,
+      nodes: layouted.nodes,
+      edges: layouted.edges,
     });
     setFlow(relayouted);
     setNodes(toReactFlowNodes(relayouted.nodes));
@@ -302,6 +309,19 @@ function FlowCanvasInner({ initialFlow }: FlowCanvasProps) {
       edges: fromReactFlowEdges(edges),
     });
   }, [flow, nodes, edges]);
+
+  const handleLoadRoutingGraph = useCallback(() => {
+    void import("@/lib/contextai/routingAdapter").then(({ createContextAiRoutingFlow }) => {
+      const imported = createContextAiRoutingFlow();
+      historyRef.current.clear();
+      historyRef.current.push(snapshotFromFlow(imported));
+      setFlow(imported);
+      setNodes(toReactFlowNodes(imported.nodes));
+      setEdges(toReactFlowEdges(imported.edges));
+      setSaveState("saved");
+      saveFlow(imported);
+    });
+  }, [setNodes, setEdges]);
 
   const handleImportFlow = useCallback(
     async (file: File) => {
@@ -423,6 +443,7 @@ function FlowCanvasInner({ initialFlow }: FlowCanvasProps) {
             Redo
           </ToolbarButton>
           <ToolbarButton onClick={handleRelayout}>Auto-layout</ToolbarButton>
+          <ToolbarButton onClick={handleLoadRoutingGraph}>Load Routing Graph</ToolbarButton>
           <ToolbarButton onClick={() => importFlowRef.current?.click()}>Import Flow</ToolbarButton>
           <ToolbarButton onClick={() => importTraceRef.current?.click()}>Import Trace</ToolbarButton>
           <ToolbarButton onClick={handleExport}>Export JSON</ToolbarButton>

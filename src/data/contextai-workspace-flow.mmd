@@ -1,0 +1,85 @@
+flowchart TD
+    A["New user turn"] --> S{"New repository session?"}
+    S -->|"Yes"| C{"Is the repository connected and available?"}
+    C -->|"No"| U["Report repository unavailable and request access"]
+    U --> STOP["Stop"]
+
+    C -->|"Yes"| AG["Read AGENTS.md"]
+    AG --> O["Read IDENTITY.md"]
+    O --> R["Read root CONTEXT.md and re-evaluate this turn"]
+
+    S -->|"No"| AV{"Is the repository still available?"}
+    AV -->|"No"| U
+    AV -->|"Yes"| R
+
+    R --> CR{"Is routing materially ambiguous or cross-responsibility?"}
+    CR -->|"No"| W["Select the smallest sufficient route"]
+    CR -->|"Yes"| CO["Conductor selects the smallest sufficient route"]
+    CO --> W
+
+    W --> DA["Direct answer"]
+    W --> ID["Ideas workspace"]
+    W --> PM["Product Manager"]
+    W --> IT["Issue Triage and Sequencing skill"]
+    W --> PCI["Project Context Intake skill"]
+    W --> PJ["Project Manager"]
+    W --> SRC["Bounded source analysis"]
+    W --> PR["Prototype skill"]
+    W --> UX["UX/UI Review skill"]
+    W --> BE["Browser Evidence skill"]
+    W --> SOL["Solution Architect"]
+    W --> SEC["Security & Compliance"]
+    W --> MKT["Marketing/Growth"]
+    W --> BH["Build-readiness handoff"]
+    W --> IMP["Explicit implementation request"]
+    DA --> STOP
+
+    IMP --> BRQ{"Is a build-readiness handoff needed?"}
+    BRQ -->|"Yes"| BH
+    BRQ -->|"No"| RC["Requirements Check skill"]
+    BH --> RC
+    RC -->|"blocked or UNKNOWN"| GAP["Identify missing definition, placement, coordination, or handoff"]
+    GAP -->|"product definition or priority"| PM
+    GAP -->|"target placement or reuse"| SOL
+    GAP -->|"sequence, dependencies, or Issues"| PJ
+    GAP -->|"multiple judgments or handoff preparation"| BH
+    RC -->|"ready"| BU["Builder"]
+    BU --> BR["Implementation result or handoff"]
+    BR --> N["Determine next action"]
+
+    PR --> PD{"Prototype outcome?"}
+    PD -->|"Refine"| PR
+    PD -->|"Selected build basis"| PBR{"Is a build-readiness handoff needed?"}
+    PBR -->|"Yes"| BH
+    PBR -->|"No"| RC
+    PD -->|"No durable action"| STOP
+
+    IT -->|"value or priority UNKNOWN"| PM
+    IT -->|"sequence or Issue actions recommended"| PJ
+    IT -->|"no Issue action needed"| N
+    PCI --> N
+
+    ID --> N
+    PM --> N
+    PJ --> N
+    SRC --> N
+    UX --> N
+    BE --> N
+    SOL --> N
+    SEC --> N
+    MKT --> N
+
+    N -->|"No durable change"| STOP
+    N -->|"Named active-contract change"| P["Update affected active contracts"]
+    N -->|"Explicit Issue action"| I["Execute requested Issue action"]
+    N -->|"Another handoff"| H["Deliver handoff"]
+
+    P --> E["Record result and reconcile affected contracts"]
+    I --> E
+    H --> E
+
+    E --> T{"Was ContextAi workflow used?"}
+    T -->|"Yes"| TR["Record Workflow Trace skill: contextai_used = true"]
+    T -->|"No"| NR["Record Workflow Trace skill: contextai_used = false"]
+    TR --> STOP
+    NR --> STOP

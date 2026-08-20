@@ -143,10 +143,17 @@ export function importContextAiTraceJson(raw: string, importedFrom?: string): Fl
 export function autoLayoutFlow(
   nodes: FlowNode[],
   edges: FlowEdge[],
+  options?: { rankdir?: "TB" | "LR" },
 ): { nodes: FlowNode[]; edges: FlowEdge[] } {
   const graph = new dagre.graphlib.Graph();
   graph.setDefaultEdgeLabel(() => ({}));
-  graph.setGraph({ rankdir: "LR", nodesep: 70, ranksep: 90, marginx: 40, marginy: 40 });
+  graph.setGraph({
+    rankdir: options?.rankdir ?? "LR",
+    nodesep: 70,
+    ranksep: 90,
+    marginx: 40,
+    marginy: 40,
+  });
 
   for (const node of nodes) {
     graph.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });
