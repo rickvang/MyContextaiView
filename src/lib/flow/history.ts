@@ -88,6 +88,8 @@ export function fromReactFlowNodes(nodes: Node[]): FlowNode[] {
       description: node.data.description ? String(node.data.description) : undefined,
       state: node.data.state ? String(node.data.state) : undefined,
       detail: node.data.detail ? String(node.data.detail) : undefined,
+      contractPath: node.data.contractPath ? String(node.data.contractPath) : undefined,
+      contractUrl: node.data.contractUrl ? String(node.data.contractUrl) : undefined,
     },
   }));
 }

@@ -19,6 +19,10 @@ export type FlowNodeData = {
   description?: string;
   state?: string;
   detail?: string;
+  /** Repo-relative ContextAi contract path, e.g. operating-models/builder/CONTEXT.md */
+  contractPath?: string;
+  /** Openable URL for the contract (typically GitHub blob) */
+  contractUrl?: string;
 };
 
 export type FlowNode = {

@@ -7,6 +7,8 @@ type BaseNodeData = {
   description?: string;
   state?: string;
   detail?: string;
+  contractPath?: string;
+  contractUrl?: string;
 };
 
 const stateColors: Record<string, string> = {
@@ -15,7 +17,25 @@ const stateColors: Record<string, string> = {
   recorded: "var(--accent)",
   blocked: "var(--red)",
   unknown: "var(--amber)",
+  decision: "var(--accent)",
+  contract: "var(--violet)",
 };
+
+function ContractLink({ path, url }: { path: string; url: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      onClick={(event) => event.stopPropagation()}
+      onMouseDown={(event) => event.stopPropagation()}
+      className="mt-2 inline-flex max-w-full items-center gap-1 truncate text-[11px] font-medium text-[var(--accent)] hover:underline"
+      title={path}
+    >
+      Open contract
+    </a>
+  );
+}
 
 function NodeShell({
   kind,
@@ -55,6 +75,11 @@ function NodeShell({
             {data.state}
           </div>
         ) : null}
+        {data.contractUrl && data.contractPath ? (
+          <div>
+            <ContractLink path={data.contractPath} url={data.contractUrl} />
+          </div>
+        ) : null}
       </div>
       <Handle type="source" position={Position.Right} className="!h-2 !w-2 !border-[var(--border)] !bg-[var(--surface-3)]" />
     </div>
@@ -82,6 +107,7 @@ export function HandoffNode({ data, selected }: NodeProps) {
 }
 
 export function NoteNode({ data, selected }: NodeProps) {
+  const noteData = data as BaseNodeData;
   return (
     <div
       className="min-w-[180px] max-w-[220px] rounded-xl border border-dashed bg-[var(--surface-2)] px-3 py-2.5"
@@ -91,8 +117,11 @@ export function NoteNode({ data, selected }: NodeProps) {
     >
       <Handle type="target" position={Position.Left} className="!h-2 !w-2 !border-[var(--border)] !bg-[var(--surface-3)]" />
       <div className="text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--faint)]">Note</div>
-      <div className="mt-1 text-sm text-[var(--text)]">{String(data.label ?? "Note")}</div>
-      {data.description ? <div className="mt-1 text-xs text-[var(--muted)]">{String(data.description)}</div> : null}
+      <div className="mt-1 text-sm text-[var(--text)]">{String(noteData.label ?? "Note")}</div>
+      {noteData.description ? <div className="mt-1 text-xs text-[var(--muted)]">{String(noteData.description)}</div> : null}
+      {noteData.contractUrl && noteData.contractPath ? (
+        <ContractLink path={noteData.contractPath} url={noteData.contractUrl} />
+      ) : null}
       <Handle type="source" position={Position.Right} className="!h-2 !w-2 !border-[var(--border)] !bg-[var(--surface-3)]" />
     </div>
   );

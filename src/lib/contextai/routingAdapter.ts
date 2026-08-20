@@ -1,5 +1,6 @@
 import type { FlowDocument, FlowEdge, FlowNode, FlowNodeType } from "../flow/schema";
 import { createEdgeId, createFlowId, createNode, touchFlow } from "../flow/schema";
+import { resolveContract } from "./contracts";
 import { autoLayoutFlow } from "./traceAdapter";
 import workspaceFlowMermaid from "@/data/contextai-workspace-flow.mmd";
 
@@ -165,6 +166,7 @@ export function mermaidToFlowDocument(
   const parsed = parseMermaidFlowchart(source);
   const nodes: FlowNode[] = parsed.nodes.map((node) => {
     const type = classifyNode(node.id, node.label, node.shape);
+    const contract = resolveContract(node.id, node.label);
     return createNode(type, { x: 0, y: 0 }, {
       label: node.label,
       description:
@@ -178,7 +180,11 @@ export function mermaidToFlowDocument(
                 ? "Terminal or handoff"
                 : "Workspace flow step",
       state: node.shape === "diamond" ? "decision" : "contract",
-      detail: `ContextAi node id: ${node.id}`,
+      detail: contract
+        ? `Contract: ${contract.path}`
+        : `ContextAi node id: ${node.id}`,
+      contractPath: contract?.path,
+      contractUrl: contract?.url,
     });
   });
 

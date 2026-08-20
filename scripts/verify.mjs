@@ -65,8 +65,17 @@ function testWorkspaceFlowMermaid() {
   assert.ok(source.includes("Record Workflow Trace skill"));
 }
 
+function testContractMapFile() {
+  const contractsPath = path.join(root, "src/lib/contextai/contracts.ts");
+  const source = fs.readFileSync(contractsPath, "utf8");
+  assert.ok(source.includes("operating-models/builder/CONTEXT.md"));
+  assert.ok(source.includes("skills/coordination/requirements-check/SKILL.md"));
+  assert.ok(source.includes("github.com/rickvang/ContextAi"));
+}
+
 function testBuildArtifacts() {
-  assert.ok(fs.existsSync(path.join(root, ".next/BUILD_ID")));
+  assert.ok(fs.existsSync(path.join(root, ".next/build-manifest.json")));
+  assert.ok(fs.existsSync(path.join(root, ".next/app-build-manifest.json")));
 }
 
 const tests = [
@@ -75,6 +84,7 @@ const tests = [
   ["ContextAi trace example shape", testContextAiTraceShape],
   ["ContextAi catalog snapshot", testCatalogSnapshot],
   ["ContextAi workspace flow mermaid", testWorkspaceFlowMermaid],
+  ["ContextAi contract map", testContractMapFile],
   ["production build artifacts", testBuildArtifacts],
 ];
 

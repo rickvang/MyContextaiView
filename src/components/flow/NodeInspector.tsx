@@ -1,6 +1,7 @@
 "use client";
 
 import type { Edge, Node } from "@xyflow/react";
+import { contractUrlForPath } from "@/lib/contextai/contracts";
 import { NODE_TYPE_LABELS, type FlowNodeType } from "@/lib/flow/schema";
 
 type NodeInspectorProps = {
@@ -61,12 +62,25 @@ export function NodeInspector({
   if (!selectedNode) return null;
 
   const nodeType = (selectedNode.type ?? "note") as FlowNodeType;
+  const contractPath = selectedNode.data.contractPath ? String(selectedNode.data.contractPath) : "";
+  const contractUrl = selectedNode.data.contractUrl ? String(selectedNode.data.contractUrl) : "";
 
   return (
     <aside className="flex w-80 shrink-0 flex-col border-l border-[var(--border)] bg-[var(--surface)] p-4">
       <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--accent)]">Inspector</div>
       <h2 className="mt-1 text-base font-semibold">{NODE_TYPE_LABELS[nodeType]}</h2>
       <p className="mt-1 text-xs text-[var(--muted)]">Node id: {selectedNode.id}</p>
+
+      {contractUrl ? (
+        <a
+          href={contractUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 inline-flex rounded-lg border border-[var(--accent-soft)] bg-[var(--accent-soft)] px-3 py-2 text-sm font-medium text-[var(--accent)] hover:opacity-90"
+        >
+          Open contract{contractPath ? `: ${contractPath.split("/").pop()}` : ""}
+        </a>
+      ) : null}
 
       <div className="mt-4 space-y-3">
         <Field
@@ -83,6 +97,16 @@ export function NodeInspector({
           label="State"
           value={String(selectedNode.data.state ?? "")}
           onChange={(value) => onUpdateNode(selectedNode.id, { state: value })}
+        />
+        <Field
+          label="Contract path"
+          value={contractPath}
+          onChange={(value) =>
+            onUpdateNode(selectedNode.id, {
+              contractPath: value || undefined,
+              contractUrl: value ? contractUrlForPath(value) : undefined,
+            })
+          }
         />
         <Field
           label="Detail"
