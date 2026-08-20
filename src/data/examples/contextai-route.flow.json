@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "example-contextai-route",
+  "name": "Example: ContextAi Route Trace",
+  "metadata": {
+    "source": "contextai-trace",
+    "importedFrom": "workflow-trace/examples/contextai-route.json"
+  },
+  "nodes": [
+    {
+      "id": "route-example",
+      "type": "route",
+      "position": { "x": 40, "y": 180 },
+      "data": {
+        "label": "Issue implementation",
+        "description": "Selected route",
+        "state": "recorded",
+        "detail": "Selection basis: The user explicitly requested implementation and a live test of revised Issue #65."
+      }
+    },
+    {
+      "id": "model-builder",
+      "type": "operatingModel",
+      "position": { "x": 330, "y": 180 },
+      "data": {
+        "label": "Builder",
+        "state": "used",
+        "detail": "Implemented the explicitly scoped Issue #65 artifact."
+      }
+    },
+    {
+      "id": "skill-requirements",
+      "type": "skill",
+      "position": { "x": 620, "y": 80 },
+      "data": {
+        "label": "Requirements Check",
+        "state": "used",
+        "detail": "Confirmed implementation readiness."
+      }
+    },
+    {
+      "id": "step-orient",
+      "type": "workflowStep",
+      "position": { "x": 910, "y": 80 },
+      "data": {
+        "label": "Orient",
+        "state": "completed",
+        "detail": "Read repository orientation, Issue #65, and the selected contracts."
+      }
+    },
+    {
+      "id": "step-validate",
+      "type": "workflowStep",
+      "position": { "x": 1200, "y": 80 },
+      "data": {
+        "label": "Validate",
+        "state": "completed",
+        "detail": "Passed valid, invalid, unavailable-checkout, direct-answer, atomic-write, automatic-refresh, recovery, and visual browser checks."
+      }
+    },
+    {
+      "id": "handoff-publish",
+      "type": "handoff",
+      "position": { "x": 1490, "y": 180 },
+      "data": {
+        "label": "Publish the implementation and record the Issue #65 completion result.",
+        "description": "Next handoff",
+        "state": "recorded",
+        "detail": "Summary: Built and exercised the local post-turn writer for revised Issue #65."
+      }
+    }
+  ],
+  "edges": [
+    { "id": "edge-route-model", "source": "route-example", "target": "model-builder", "label": "model" },
+    { "id": "edge-model-skill", "source": "model-builder", "target": "skill-requirements", "label": "skill" },
+    { "id": "edge-skill-step1", "source": "skill-requirements", "target": "step-orient", "label": "workflow" },
+    { "id": "edge-step1-step2", "source": "step-orient", "target": "step-validate", "label": "next" },
+    { "id": "edge-step2-handoff", "source": "step-validate", "target": "handoff-publish", "label": "handoff" }
+  ]
+}

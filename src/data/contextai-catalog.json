@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-08-19T00:00:00.000Z",
+  "source": "ContextAi operating-models and skills/IDENTITY.md",
+  "operatingModels": [
+    "Builder",
+    "Conductor",
+    "Marketing/Growth",
+    "Product Manager",
+    "Project Manager",
+    "Security & Compliance",
+    "Solution Architect"
+  ],
+  "skills": [
+    "Build-readiness",
+    "Browser Evidence",
+    "GitHub Project Synchronization",
+    "Issue Triage and Sequencing",
+    "Project Context Intake",
+    "Prototype",
+    "Record Workflow Trace",
+    "Requirements Check",
+    "UX/UI Review",
+    "Workspace Reconciliation"
+  ]
+}
