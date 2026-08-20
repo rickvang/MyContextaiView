@@ -15,6 +15,7 @@ import {
   renameFlow,
   saveFlow,
 } from "@/lib/flow/storage";
+import { editorHref } from "@/lib/flow/paths";
 
 export default function HomePage() {
   const router = useRouter();
@@ -32,13 +33,13 @@ export default function HomePage() {
 
   const handleCreate = () => {
     const flow = createFlow("Untitled Flow");
-    router.push(`/editor/${flow.id}`);
+    router.push(editorHref(flow.id));
   };
 
   const handleDuplicate = (id: string) => {
     const copy = duplicateFlow(id);
     refresh();
-    if (copy) router.push(`/editor/${copy.id}`);
+    if (copy) router.push(editorHref(copy.id));
   };
 
   const handleDelete = (id: string) => {
@@ -57,14 +58,14 @@ export default function HomePage() {
   const handleImportExample = () => {
     const imported = saveFlow(validateFlowDocument(exampleFlow));
     refresh();
-    router.push(`/editor/${imported.id}`);
+    router.push(editorHref(imported.id));
   };
 
   const handleOpenRoutingGraph = () => {
     void import("@/lib/contextai/routingAdapter").then(({ createContextAiRoutingFlow }) => {
       const imported = saveFlow(createContextAiRoutingFlow());
       refresh();
-      router.push(`/editor/${imported.id}`);
+      router.push(editorHref(imported.id));
     });
   };
 
@@ -73,7 +74,7 @@ export default function HomePage() {
       const raw = await readFileAsText(file);
       const imported = importFlowJson(raw);
       refresh();
-      router.push(`/editor/${imported.id}`);
+      router.push(editorHref(imported.id));
     } catch (error) {
       window.alert(error instanceof Error ? error.message : "Failed to import flow.");
     }
@@ -86,7 +87,7 @@ export default function HomePage() {
       const imported = importContextAiTraceJson(raw, file.name);
       saveFlow(imported);
       refresh();
-      router.push(`/editor/${imported.id}`);
+      router.push(editorHref(imported.id));
     } catch (error) {
       window.alert(error instanceof Error ? error.message : "Failed to import ContextAi trace.");
     }
@@ -155,7 +156,7 @@ export default function HomePage() {
                     </form>
                   ) : (
                     <>
-                      <Link href={`/editor/${flow.id}`} className="text-base font-semibold hover:text-[var(--accent)]">
+                      <Link href={editorHref(flow.id)} className="text-base font-semibold hover:text-[var(--accent)]">
                         {flow.name}
                       </Link>
                       <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[var(--muted)]">
@@ -169,7 +170,7 @@ export default function HomePage() {
 
                 {renameId === flow.id ? null : (
                   <div className="flex flex-wrap gap-2">
-                    <ActionButton onClick={() => router.push(`/editor/${flow.id}`)}>Open</ActionButton>
+                    <ActionButton onClick={() => router.push(editorHref(flow.id))}>Open</ActionButton>
                     <ActionButton
                       onClick={() => {
                         setRenameId(flow.id);

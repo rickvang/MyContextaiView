@@ -74,11 +74,13 @@ function testContractMapFile() {
 }
 
 function testBuildArtifacts() {
-  // Prefer a fresh production build artifact when present; otherwise confirm package scripts.
-  const manifest = path.join(root, ".next/build-manifest.json");
   const packageJson = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
   assert.equal(packageJson.scripts?.build, "next build");
-  if (fs.existsSync(path.join(root, ".next"))) {
+  const outIndex = path.join(root, "out/index.html");
+  const manifest = path.join(root, ".next/build-manifest.json");
+  if (fs.existsSync(path.join(root, "out"))) {
+    assert.ok(fs.existsSync(outIndex), "Expected out/index.html after static export");
+  } else if (fs.existsSync(path.join(root, ".next"))) {
     assert.ok(fs.existsSync(manifest), "Expected .next/build-manifest.json after a production build");
   }
 }

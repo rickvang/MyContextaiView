@@ -13,6 +13,21 @@ Flowise-like visual builder aligned with ContextAi routing and workflow traces.
 - Import ContextAi workflow trace JSON with auto-layout
 - Undo/redo, duplicate, auto-layout, keyboard shortcuts
 
+## Deployed site
+
+GitHub Pages: [https://rickvang.github.io/MyContextaiView/](https://rickvang.github.io/MyContextaiView/)
+
+Local:
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+Static export for Pages uses `GITHUB_PAGES=true` (set automatically by the deploy workflow) so assets resolve under `/MyContextaiView/`.
+
 ## Getting started
 
 ```bash
