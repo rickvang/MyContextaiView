@@ -73,6 +73,15 @@ function testContractMapFile() {
   assert.ok(source.includes("github.com/rickvang/ContextAi"));
 }
 
+function testPerspectiveCatalog() {
+  const perspectivePath = path.join(root, "src/data/operating-model-perspectives.json");
+  const data = JSON.parse(fs.readFileSync(perspectivePath, "utf8"));
+  assert.ok(Array.isArray(data.models));
+  assert.equal(data.models.length, 7);
+  assert.ok(data.models.every((model) => model.steps?.length > 0 && model.handoffs?.length > 0));
+  assert.ok(data.models.some((model) => model.id === "builder"));
+}
+
 function testBuildArtifacts() {
   const packageJson = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
   assert.equal(packageJson.scripts?.build, "next build");
@@ -92,6 +101,7 @@ const tests = [
   ["ContextAi catalog snapshot", testCatalogSnapshot],
   ["ContextAi workspace flow mermaid", testWorkspaceFlowMermaid],
   ["ContextAi contract map", testContractMapFile],
+  ["operating model perspectives", testPerspectiveCatalog],
   ["production build artifacts", testBuildArtifacts],
 ];
 

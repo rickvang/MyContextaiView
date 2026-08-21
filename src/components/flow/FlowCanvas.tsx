@@ -323,6 +323,22 @@ function FlowCanvasInner({ initialFlow }: FlowCanvasProps) {
     });
   }, [setNodes, setEdges]);
 
+  const handleLoadPerspective = useCallback(
+    (modelId: string) => {
+      void import("@/lib/contextai/perspectiveAdapter").then(({ createOperatingModelPerspectiveFlow }) => {
+        const imported = createOperatingModelPerspectiveFlow(modelId);
+        historyRef.current.clear();
+        historyRef.current.push(snapshotFromFlow(imported));
+        setFlow(imported);
+        setNodes(toReactFlowNodes(imported.nodes));
+        setEdges(toReactFlowEdges(imported.edges));
+        setSaveState("saved");
+        saveFlow(imported);
+      });
+    },
+    [setNodes, setEdges],
+  );
+
   const handleImportFlow = useCallback(
     async (file: File) => {
       try {
@@ -444,6 +460,30 @@ function FlowCanvasInner({ initialFlow }: FlowCanvasProps) {
           </ToolbarButton>
           <ToolbarButton onClick={handleRelayout}>Auto-layout</ToolbarButton>
           <ToolbarButton onClick={handleLoadRoutingGraph}>Load Routing Graph</ToolbarButton>
+          <label className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-2 py-1.5 text-sm">
+            <span className="text-[var(--muted)]">Perspective</span>
+            <select
+              className="max-w-[10rem] bg-transparent outline-none"
+              defaultValue=""
+              onChange={(event) => {
+                if (event.target.value) {
+                  handleLoadPerspective(event.target.value);
+                  event.target.value = "";
+                }
+              }}
+            >
+              <option value="" disabled>
+                Choose…
+              </option>
+              <option value="conductor">Conductor</option>
+              <option value="product-manager">Product Manager</option>
+              <option value="project-manager">Project Manager</option>
+              <option value="solution-architect">Solution Architect</option>
+              <option value="builder">Builder</option>
+              <option value="marketing-growth">Marketing/Growth</option>
+              <option value="security-compliance">Security &amp; Compliance</option>
+            </select>
+          </label>
           <ToolbarButton onClick={() => importFlowRef.current?.click()}>Import Flow</ToolbarButton>
           <ToolbarButton onClick={() => importTraceRef.current?.click()}>Import Trace</ToolbarButton>
           <ToolbarButton onClick={handleExport}>Export JSON</ToolbarButton>

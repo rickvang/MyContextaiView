@@ -16,12 +16,14 @@ import {
   saveFlow,
 } from "@/lib/flow/storage";
 import { editorHref } from "@/lib/flow/paths";
+import { listOperatingModelPerspectives } from "@/lib/contextai/perspectiveAdapter";
 
 export default function HomePage() {
   const router = useRouter();
   const [flows, setFlows] = useState<FlowSummary[]>([]);
   const [renameId, setRenameId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
+  const [perspectives] = useState(() => listOperatingModelPerspectives());
   const importFlowRef = useRef<HTMLInputElement>(null);
   const importTraceRef = useRef<HTMLInputElement>(null);
 
@@ -69,6 +71,14 @@ export default function HomePage() {
     });
   };
 
+  const handleOpenPerspective = (modelId: string) => {
+    void import("@/lib/contextai/perspectiveAdapter").then(({ createOperatingModelPerspectiveFlow }) => {
+      const imported = saveFlow(createOperatingModelPerspectiveFlow(modelId));
+      refresh();
+      router.push(editorHref(imported.id));
+    });
+  };
+
   const handleImportFlow = async (file: File) => {
     try {
       const raw = await readFileAsText(file);
@@ -100,7 +110,7 @@ export default function HomePage() {
           <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--accent)]">Agent Builder</div>
           <h1 className="mt-1 text-3xl font-semibold tracking-tight">Flowise-like Visual Builder</h1>
           <p className="mt-2 max-w-2xl text-sm text-[var(--muted)]">
-            Build and save ContextAi-aligned workflow graphs. Open the live workspace routing graph from CONTEXT.md, import traces, or start from a blank canvas.
+            Build and save ContextAi-aligned workflow graphs. Open the workspace routing graph, an operating-model perspective, or import traces.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -111,6 +121,31 @@ export default function HomePage() {
           <ActionButton onClick={() => importTraceRef.current?.click()}>Import ContextAi Trace</ActionButton>
         </div>
       </header>
+
+      <section className="mb-8 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[0_24px_60px_rgba(0,0,0,0.25)]">
+        <div className="border-b border-[var(--border)] px-5 py-4">
+          <h2 className="text-lg font-semibold">Operating Model Perspectives</h2>
+          <p className="mt-1 text-sm text-[var(--muted)]">
+            See each operating model&apos;s process, handoffs, and boundaries from its own contract.
+          </p>
+        </div>
+        <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
+          {perspectives.map((model) => (
+            <button
+              key={model.id}
+              type="button"
+              onClick={() => handleOpenPerspective(model.id)}
+              className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-left transition hover:border-[var(--accent)] hover:bg-[var(--surface-3)]"
+            >
+              <div className="text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--violet)]">
+                Operating model
+              </div>
+              <div className="mt-1 text-sm font-semibold">{model.name}</div>
+              <div className="mt-1 text-xs text-[var(--muted)]">{model.purpose}</div>
+            </button>
+          ))}
+        </div>
+      </section>
 
       <section className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[0_24px_60px_rgba(0,0,0,0.25)]">
         <div className="border-b border-[var(--border)] px-5 py-4">

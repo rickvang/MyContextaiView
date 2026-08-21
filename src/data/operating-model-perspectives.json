@@ -1,0 +1,212 @@
+{
+  "models": [
+    {
+      "id": "conductor",
+      "name": "Conductor",
+      "contractPath": "operating-models/conductor/CONTEXT.md",
+      "entry": "Routing is materially ambiguous or cross-responsibility",
+      "purpose": "Select the smallest sufficient route without owning product or delivery authority",
+      "steps": [
+        "Establish objective, constraints, and completion condition",
+        "Reconcile against relevant active contracts and live Issues",
+        "Resolve routing ambiguity",
+        "Select one direct answer, operating model, idea, or builder route",
+        "Load only required context",
+        "Return route, reconciled result, or stop"
+      ],
+      "handoffs": [
+        { "label": "Product value / priority", "target": "Product Manager", "kind": "operatingModel" },
+        { "label": "Issue necessity / build order", "target": "Issue Triage and Sequencing", "kind": "skill" },
+        { "label": "Roadmap / Issue actions", "target": "Project Manager", "kind": "operatingModel" },
+        { "label": "System placement / reuse", "target": "Solution Architect", "kind": "operatingModel" },
+        { "label": "Security / compliance audit", "target": "Security & Compliance", "kind": "operatingModel" },
+        { "label": "Implementation readiness", "target": "Requirements Check", "kind": "skill" },
+        { "label": "Scoped implementation", "target": "Builder", "kind": "operatingModel" },
+        { "label": "Audience / positioning", "target": "Marketing/Growth", "kind": "operatingModel" },
+        { "label": "Multi-model handoff packet", "target": "Build-readiness", "kind": "skill" },
+        { "label": "Exploratory idea", "target": "Ideas workspace", "kind": "route" }
+      ],
+      "doesNot": [
+        "Act as default entry for clear single-responsibility routes",
+        "Embed every specialist method",
+        "Silently write repository or Issue changes"
+      ]
+    },
+    {
+      "id": "product-manager",
+      "name": "Product Manager",
+      "contractPath": "operating-models/product-manager/CONTEXT.md",
+      "entry": "Product value, priority, or smallest useful release is unresolved",
+      "purpose": "Recommend the smallest useful release or experiment for a real job",
+      "steps": [
+        "Frame the opportunity and progress sought",
+        "Identify evidence, assumptions, constraints, stakeholders",
+        "Clarify value with JTBD and journey",
+        "Map candidate capabilities beneath the journey",
+        "Cut the smallest coherent release or learning slice",
+        "Return product recommendation with exclusions and risks"
+      ],
+      "handoffs": [
+        { "label": "Accepted direction needs delivery coordination", "target": "Project Manager", "kind": "operatingModel" },
+        { "label": "Idea remains exploratory", "target": "Ideas workspace", "kind": "route" },
+        { "label": "Named durable destination needed", "target": "Active contract or Issue", "kind": "handoff" }
+      ],
+      "doesNot": [
+        "Execute its own recommendation",
+        "Silently change active contracts or Issues",
+        "Own delivery sequencing"
+      ]
+    },
+    {
+      "id": "project-manager",
+      "name": "Project Manager",
+      "contractPath": "operating-models/project-manager/CONTEXT.md",
+      "entry": "Roadmap, blockers, dependencies, or Issue coordination is needed",
+      "purpose": "Coordinate delivery and explicit GitHub Issue actions",
+      "steps": [
+        "Establish objective, active work, and completion condition",
+        "Reconcile Issues, evidence, and affected contracts",
+        "Route unresolved value to Product Manager when needed",
+        "Maintain one active slice and at most one prepared next",
+        "Select planning, execution, or closure route",
+        "Return coordination result and exact next action"
+      ],
+      "handoffs": [
+        { "label": "Value / priority UNKNOWN", "target": "Product Manager", "kind": "operatingModel" },
+        { "label": "Multi-Issue necessity review", "target": "Issue Triage and Sequencing", "kind": "skill" },
+        { "label": "Issue planning / sequencing", "target": "issue-planning-and-sequencing", "kind": "route" },
+        { "label": "Issue execution / reconciliation", "target": "issue-execution-and-reconciliation", "kind": "route" },
+        { "label": "Issue closure / follow-up", "target": "issue-closure-and-follow-up", "kind": "route" },
+        { "label": "Implementation needed", "target": "Builder", "kind": "operatingModel" },
+        { "label": "No justified action", "target": "Stop", "kind": "handoff" }
+      ],
+      "doesNot": [
+        "Decide product value",
+        "Silently change active contracts",
+        "Create backlog merely to show activity"
+      ]
+    },
+    {
+      "id": "solution-architect",
+      "name": "Solution Architect",
+      "contractPath": "operating-models/solution-architect/CONTEXT.md",
+      "entry": "System fit, destination, reuse, or integration boundaries need assessment",
+      "purpose": "Assess placement and return a solution assessment packet",
+      "steps": [
+        "Confirm assessment question and target boundary",
+        "Inspect authorized target material",
+        "Select architecture profile",
+        "Evaluate destination, reuse, gaps, and dependencies",
+        "Return solution assessment with UNKNOWN preserved",
+        "Name handoff destination and next action"
+      ],
+      "handoffs": [
+        { "label": "Product value remains open", "target": "Product Manager", "kind": "operatingModel" },
+        { "label": "Sequence / Issues", "target": "Project Manager", "kind": "operatingModel" },
+        { "label": "Multi-model planning packet", "target": "Build-readiness", "kind": "skill" },
+        { "label": "Implementation boundary ready", "target": "Builder", "kind": "operatingModel" },
+        { "label": "Market-facing constraints", "target": "Marketing/Growth", "kind": "operatingModel" }
+      ],
+      "doesNot": [
+        "Decide product value or roadmap priority",
+        "Implement production artifacts",
+        "Modify contracts or Issues by default"
+      ]
+    },
+    {
+      "id": "builder",
+      "name": "Builder",
+      "contractPath": "operating-models/builder/CONTEXT.md",
+      "entry": "Explicit request to implement a scoped artifact",
+      "purpose": "Implement within authority and return evidence-backed result",
+      "steps": [
+        "Confirm artifact, target, scope, criteria, and authority",
+        "Run Requirements Check",
+        "Select smallest Builder profile",
+        "State implementation boundary",
+        "Implement requested scope",
+        "Validate with profile-appropriate checks",
+        "Return implementation result or named handoff"
+      ],
+      "decisions": [
+        {
+          "afterStep": 1,
+          "label": "Requirements Check result?",
+          "branches": [
+            { "label": "ready", "resumeAtStep": 2 },
+            { "label": "blocked / UNKNOWN", "target": "Missing prerequisite", "kind": "handoff" }
+          ]
+        },
+        {
+          "afterStep": 5,
+          "label": "QA / validation outcome?",
+          "branches": [
+            { "label": "defect / failed check", "resumeAtStep": 4 },
+            { "label": "scope mismatch", "target": "Requirements Check", "kind": "skill" },
+            { "label": "checks pass", "resumeAtStep": 6 }
+          ]
+        }
+      ],
+      "handoffs": [
+        { "label": "Product definition missing", "target": "Product Manager", "kind": "operatingModel" },
+        { "label": "Placement / reuse missing", "target": "Solution Architect", "kind": "operatingModel" },
+        { "label": "Sequence / Issues missing", "target": "Project Manager", "kind": "operatingModel" },
+        { "label": "Multi-judgment packet needed", "target": "Build-readiness", "kind": "skill" },
+        { "label": "Readiness gate", "target": "Requirements Check", "kind": "skill" }
+      ],
+      "doesNot": [
+        "Change product direction or priority",
+        "Choose system destination when architecture judgment is required",
+        "Create, update, or close Issues by default"
+      ]
+    },
+    {
+      "id": "marketing-growth",
+      "name": "Marketing/Growth",
+      "contractPath": "operating-models/marketing-growth/CONTEXT.md",
+      "entry": "Audience, positioning, messaging, or market experiment is needed",
+      "purpose": "Recommend market-facing direction or experiment packet",
+      "steps": [
+        "Frame audience and market question",
+        "Gather constraints and evidence",
+        "Select positioning, experiment, or content profile",
+        "Produce recommendation or experiment packet",
+        "Name exclusions, risks, and next decision"
+      ],
+      "handoffs": [
+        { "label": "Product value conflict", "target": "Product Manager", "kind": "operatingModel" },
+        { "label": "Approved market artifact to build", "target": "Builder", "kind": "operatingModel" },
+        { "label": "Delivery coordination", "target": "Project Manager", "kind": "operatingModel" }
+      ],
+      "doesNot": [
+        "Own product value decisions",
+        "Silently execute implementation",
+        "Create Issues by default"
+      ]
+    },
+    {
+      "id": "security-compliance",
+      "name": "Security & Compliance",
+      "contractPath": "operating-models/security-compliance/CONTEXT.md",
+      "entry": "Bounded security or compliance audit is requested",
+      "purpose": "Record findings with evidence, severity, and next action",
+      "steps": [
+        "Confirm audit boundary and profile",
+        "Gather source and evaluator references separately",
+        "Inspect authorized evidence",
+        "Record findings, severity, and uncertainty",
+        "Return finding record and next action"
+      ],
+      "handoffs": [
+        { "label": "Remediation implementation", "target": "Builder", "kind": "operatingModel" },
+        { "label": "Priority / product impact", "target": "Product Manager", "kind": "operatingModel" },
+        { "label": "Coordination / Issue action", "target": "Project Manager", "kind": "operatingModel" }
+      ],
+      "doesNot": [
+        "Silently block ordinary work",
+        "Automatically remediate",
+        "Change active contracts or Issues by default"
+      ]
+    }
+  ]
+}
