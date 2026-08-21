@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "id": "example-experiment-coordination",
+  "name": "Example: PM experiment coordination handoff (#168)",
+  "metadata": {
+    "source": "manual",
+    "importedFrom": "ContextAi Issue #168 representative handoff"
+  },
+  "nodes": [
+    {
+      "id": "pm-product",
+      "type": "operatingModel",
+      "position": { "x": 40, "y": 160 },
+      "data": {
+        "label": "Product Manager",
+        "description": "Accepted experiment recommendation",
+        "state": "completed",
+        "detail": "product_decision_ref: mycontextaiview-experiment-visibility; learning objective: operators see experiment coordination fields on PM routes; stopping condition: one end-to-end planning/closure cycle preserves fields; decision owner: user"
+      }
+    },
+    {
+      "id": "pm-planning",
+      "type": "route",
+      "position": { "x": 330, "y": 160 },
+      "data": {
+        "label": "issue-planning-and-sequencing",
+        "description": "Experiment-backed coordination branch",
+        "state": "active",
+        "detail": "Carries experiment_ref, learning objective, evidence collection state, stopping condition, decision owner, and UNKNOWN fields into Issue change plan"
+      }
+    },
+    {
+      "id": "issue-168",
+      "type": "workflowStep",
+      "position": { "x": 620, "y": 80 },
+      "data": {
+        "label": "Plan Issue slice",
+        "state": "completed",
+        "detail": "ContextAi route contract update plus MyContextaiView perspective/example flow"
+      }
+    },
+    {
+      "id": "pm-closure",
+      "type": "route",
+      "position": { "x": 910, "y": 240 },
+      "data": {
+        "label": "issue-closure-and-follow-up",
+        "description": "Experiment closure fields",
+        "state": "upcoming",
+        "detail": "observed result, evidence pointer, evidence quality, learning reference, follow-up or no follow-up"
+      }
+    },
+    {
+      "id": "handoff-next",
+      "type": "handoff",
+      "position": { "x": 1200, "y": 160 },
+      "data": {
+        "label": "Merge PRs and close #168 when completion conditions met",
+        "description": "Next handoff",
+        "state": "recorded"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-pm-plan",
+      "source": "pm-product",
+      "target": "pm-planning",
+      "label": "experiment packet"
+    },
+    {
+      "id": "e-plan-issue",
+      "source": "pm-planning",
+      "target": "issue-168",
+      "label": "plan"
+    },
+    {
+      "id": "e-issue-close",
+      "source": "issue-168",
+      "target": "pm-closure",
+      "label": "closure"
+    },
+    {
+      "id": "e-close-handoff",
+      "source": "pm-closure",
+      "target": "handoff-next",
+      "label": "handoff"
+    }
+  ]
+}
