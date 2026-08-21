@@ -22,6 +22,14 @@ function validateFlowDocument(value) {
   return value;
 }
 
+function testExperimentCoordinationExample() {
+  const examplePath = path.join(root, "src/data/examples/experiment-coordination.flow.json");
+  const flow = validateFlowDocument(JSON.parse(fs.readFileSync(examplePath, "utf8")));
+  assert.equal(flow.nodes.length, 5);
+  assert.equal(flow.edges.length, 4);
+  assert.ok(flow.nodes.some((node) => node.data.label.includes("issue-planning-and-sequencing")));
+}
+
 function testExampleFlowValidation() {
   const examplePath = path.join(root, "src/data/examples/contextai-route.flow.json");
   const flow = validateFlowDocument(JSON.parse(fs.readFileSync(examplePath, "utf8")));
@@ -96,6 +104,7 @@ function testBuildArtifacts() {
 
 const tests = [
   ["example flow validation", testExampleFlowValidation],
+  ["experiment coordination example", testExperimentCoordinationExample],
   ["export/import roundtrip", testExportImportRoundtrip],
   ["ContextAi trace example shape", testContextAiTraceShape],
   ["ContextAi catalog snapshot", testCatalogSnapshot],
