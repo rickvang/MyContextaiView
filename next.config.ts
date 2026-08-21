@@ -5,6 +5,8 @@ const isGithubPages = process.env.GITHUB_PAGES === "true";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Avoid Next.js 15.5 devtools segment-explorer manifest corruption on Windows dev.
+  devIndicators: false,
   output: "export",
   trailingSlash: true,
   images: {
