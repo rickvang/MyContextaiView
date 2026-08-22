@@ -48,6 +48,7 @@
       ],
       "handoffs": [
         { "label": "Accepted direction needs delivery coordination", "target": "Project Manager", "kind": "operatingModel" },
+        { "label": "Experiment packet (refs, learning objective, stopping condition)", "target": "Project Manager", "kind": "operatingModel" },
         { "label": "Idea remains exploratory", "target": "Ideas workspace", "kind": "route" },
         { "label": "Named durable destination needed", "target": "Active contract or Issue", "kind": "handoff" }
       ],
@@ -67,6 +68,7 @@
         "Establish objective, active work, and completion condition",
         "Reconcile Issues, evidence, and affected contracts",
         "Route unresolved value to Product Manager when needed",
+        "When experiment-backed, carry conditional coordination fields from accepted packet",
         "Maintain one active slice and at most one prepared next",
         "Select planning, execution, or closure route",
         "Return coordination result and exact next action"
@@ -75,8 +77,10 @@
         { "label": "Value / priority UNKNOWN", "target": "Product Manager", "kind": "operatingModel" },
         { "label": "Multi-Issue necessity review", "target": "Issue Triage and Sequencing", "kind": "skill" },
         { "label": "Issue planning / sequencing", "target": "issue-planning-and-sequencing", "kind": "route" },
+        { "label": "Experiment-backed planning fields", "target": "issue-planning-and-sequencing", "kind": "route" },
         { "label": "Issue execution / reconciliation", "target": "issue-execution-and-reconciliation", "kind": "route" },
         { "label": "Issue closure / follow-up", "target": "issue-closure-and-follow-up", "kind": "route" },
+        { "label": "Experiment closure fields", "target": "issue-closure-and-follow-up", "kind": "route" },
         { "label": "Implementation needed", "target": "Builder", "kind": "operatingModel" },
         { "label": "No justified action", "target": "Stop", "kind": "handoff" }
       ],

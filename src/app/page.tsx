@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import exampleFlow from "@/data/examples/contextai-route.flow.json";
+import experimentCoordinationFlow from "@/data/examples/experiment-coordination.flow.json";
 import { validateFlowDocument, type FlowSummary } from "@/lib/flow/schema";
 import {
   createFlow,
@@ -63,6 +64,12 @@ export default function HomePage() {
     router.push(editorHref(imported.id));
   };
 
+  const handleImportExperimentExample = () => {
+    const imported = saveFlow(validateFlowDocument(experimentCoordinationFlow));
+    refresh();
+    router.push(editorHref(imported.id));
+  };
+
   const handleOpenRoutingGraph = () => {
     void import("@/lib/contextai/routingAdapter").then(({ createContextAiRoutingFlow }) => {
       const imported = saveFlow(createContextAiRoutingFlow());
@@ -117,6 +124,7 @@ export default function HomePage() {
           <ActionButton onClick={handleCreate}>New Flow</ActionButton>
           <ActionButton onClick={handleOpenRoutingGraph}>Open Routing Graph</ActionButton>
           <ActionButton onClick={handleImportExample}>Open Trace Example</ActionButton>
+          <ActionButton onClick={handleImportExperimentExample}>Open Experiment Handoff Example</ActionButton>
           <ActionButton onClick={() => importFlowRef.current?.click()}>Import Flow JSON</ActionButton>
           <ActionButton onClick={() => importTraceRef.current?.click()}>Import ContextAi Trace</ActionButton>
         </div>
