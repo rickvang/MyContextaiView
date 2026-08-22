@@ -63,7 +63,17 @@ export function ContractContent({ path, url }: ContractContentProps) {
         {loading ? (
           <p className="text-sm text-[var(--muted)]">Loading contract…</p>
         ) : error ? (
-          <p className="text-sm text-[var(--red)]">{error}</p>
+          error.includes("Failed to load contract (404)") ? (
+            <div className="space-y-2 text-sm">
+              <p className="text-[var(--amber)]">Contract content is unavailable on this public site.</p>
+              <p className="text-[var(--muted)]">
+                ContextAi is a private repository, so GitHub Pages cannot fetch its markdown anonymously.
+                Open the GitHub link above while signed in to view the contract.
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-[var(--red)]">{error}</p>
+          )
         ) : (
           <pre className="whitespace-pre-wrap break-words font-mono text-[11px] leading-relaxed text-[var(--text)]">
             {content}
